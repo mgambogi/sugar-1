@@ -28,6 +28,7 @@ import os
 import sys
 import subprocess
 import shutil
+import argparse
 
 # Change the default encoding to avoid UnicodeDecodeError
 # http://lists.sugarlabs.org/archive/sugar-devel/2012-August/038928.html
@@ -233,8 +234,7 @@ def _start_intro():
     window.connect('done', __intro_window_done_cb)
     window.show_all()
 
-
-def main():
+def start():
     GLib.threads_init()
     Gdk.threads_init()
     dbus.glib.threads_init()
@@ -269,5 +269,17 @@ def main():
         print 'Ctrl+C pressed, exiting...'
 
     _stop_window_manager()
+
+def main():
+    parser = argparse.ArgumentParser(description='Starts the sugar desktop enviornment.')
+    
+    parser.add_argument('-v','--version', action='store_true',help='Prints the version information.')
+
+    args = parser.parse_args()
+
+    if args.version:
+        print(config.version)
+    else:
+        start()
 
 main()
