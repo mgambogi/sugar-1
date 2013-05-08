@@ -55,11 +55,10 @@ _actions_table = {
     '<alt><shift>Tab': 'previous_window',
     '<alt>Escape': 'close_window',
     'XF86WebCam': 'open_search',
-# the following are intended for emulator users
     '<alt><shift>f': 'frame',
-    '<alt><shift>q': 'quit_emulator',
     'XF86Search': 'open_search',
-    '<alt><shift>o': 'open_search'
+    '<alt><shift>o': 'open_search',
+    '<alt><shift>q': 'logout'
 }
 
 
@@ -154,8 +153,9 @@ class KeyHandler(object):
     def handle_frame(self, event_time):
         self._frame.notify_key_press()
 
-    def handle_quit_emulator(self, event_time):
-        session.get_session_manager().shutdown()
+    def handle_logout(self, event_time):
+        if "SUGAR_DEVELOPER" in os.environ:
+            session.get_session_manager().logout()
 
     def handle_open_search(self, event_time):
         journalactivity.get_journal().show_journal()
@@ -208,8 +208,4 @@ class KeyHandler(object):
 
 def setup(frame):
     global _instance
-
-    if _instance:
-        del _instance
-
     _instance = KeyHandler(frame)
